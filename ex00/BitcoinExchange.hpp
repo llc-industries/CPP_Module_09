@@ -28,8 +28,8 @@ public:
 
 private:
 	void _checkAndSkipHeader(std::string filename, std::ifstream& filestream, std::string header);
-	/* std::string _validateDate(std::string& line);
-	void _validateValue(std::string& line); */
+	bool _validateDate(std::string& date);
+	bool _validateValue(std::string& value);
 	std::map<std::string, float> _database;
 
 };

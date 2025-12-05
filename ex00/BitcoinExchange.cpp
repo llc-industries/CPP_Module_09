@@ -57,15 +57,51 @@ void BitcoinExchange::processInput(std::string file) {
 	_checkAndSkipHeader(file, inputFile, INPUT_HEADER);
 
 	while(std::getline(inputFile, line)) {
+		if (line.empty())
+			continue;
+
+		size_t pipePos = line.find('|');
+		if (pipePos == std::string::npos) {
+			std::cout << ERROR << "bad input => " << line << '\n';
+			continue;
+		}
+
+		std::string date = line.substr(0, pipePos - 1);
+		std::string valueStr = line.substr(pipePos + 1);
+		if (_validateDate(date) == false || _validateValue(valueStr) == false)
+			continue;
+
 
 	}
 }
 
-/* void BitcoinExchange::_validateDate(std::string& line) {
+bool BitcoinExchange::_validateDate(std::string& date) {
+	if (date.length() != 10 || date[4] != '-' || date[7] != '-'){
+		std::cout << ERROR << "bad input => " << date << '\n';
+		return false;
+	}
 
+	char *endptr = NULL;
+
+	long year = std::strtol(date.c_str(), &endptr, 10);
+	if (*endptr != '-' || year < 0) {
+		std::cout << ERROR << "bad year => " << date;
+		return false;
+	}
+
+	long month = std::strtol(date.c_str() + 5, &endptr, 10);
+	if (*endptr != '-' || month < 0 || month > 12) {
+		std::cout << ERROR << "bad month => " << date << '\n';
+		return false;
+	}
+
+	long day = std::strtol(date.c_str() + 8, &endptr, 10);
+	std::cout << day << '\n';
+	return true;
 }
 
-void BitcoinExchange::_validateValue(std::string& line) {
-
-} */
+bool BitcoinExchange::_validateValue(std::string& value) {
+	(void) value;
+	return true;
+}
 
