@@ -18,6 +18,7 @@ class BitcoinExchange {
 public:
 /* Canonical orthodox */
 	BitcoinExchange();
+	// TODO: parametric ctor with argv[1], gives result instantly
 	BitcoinExchange(const BitcoinExchange& other);
 	~BitcoinExchange();
 	BitcoinExchange& operator= (const BitcoinExchange& other);
@@ -29,7 +30,9 @@ public:
 private:
 	void _checkAndSkipHeader(std::string filename, std::ifstream& filestream, std::string header);
 	bool _validateDate(std::string& date);
-	bool _validateValue(std::string& value);
+	bool _validateValue(std::string& valueStr, float& value);
+	bool _checkDayWithinMonth(long day, long month, long year);
+	void _printValue(std::string& date, float& value);
 	std::map<std::string, float> _database;
 
 };
