@@ -31,7 +31,7 @@ void BitcoinExchange::mapDatabase() {
 
 	if (dbFile.bad()) {
 		std::perror(("Error while reading file " + filename).c_str());
-		throw std::exception(); // TODO créer what() avec runtime_error
+		throw std::exception(); // TODO créer what() avec std::runtime_error
 	}
 }
 
@@ -106,6 +106,12 @@ bool BitcoinExchange::_validateDate(std::string& date) {
 	}
 	else if (_checkDayWithinMonth(day, month, year) == false)
 		return false;
+
+	if (date < "2009-01-02"){
+		std::cout << ERROR << "date is older than bitcoin => " << date << '\n';
+		return false;
+	}
+
 	return true;
 }
 
@@ -154,7 +160,10 @@ bool BitcoinExchange::_checkDayWithinMonth(long day, long month, long year) {
 }
 
 void BitcoinExchange::_printValue(std::string& date, float& value) {
-	std::cout << date << " => " << value;
-
 	std::map<std::string, float>::iterator it = _database.lower_bound(date);
+
+	if (it == _database.end() || (it != _database.begin() && it->first != date))
+		--it;
+
+	std::cout << date << " => " << value << " = " << (it->second * value) << '\n';
 }
