@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cerrno>
+#include <cstring>
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -18,7 +20,7 @@ class BitcoinExchange {
 public:
 /* Canonical orthodox */
 	BitcoinExchange();
-	// TODO: parametric ctor with argv[1], gives result instantly
+	BitcoinExchange(const std::string input);
 	BitcoinExchange(const BitcoinExchange& other);
 	~BitcoinExchange();
 	BitcoinExchange& operator= (const BitcoinExchange& other);

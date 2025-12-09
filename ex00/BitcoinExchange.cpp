@@ -4,6 +4,14 @@
 
 BitcoinExchange::BitcoinExchange() {}
 
+BitcoinExchange::BitcoinExchange(const std::string input_file) {
+	try {
+		mapDatabase();
+		processInput(input_file);
+	}
+	catch(const std::exception& e) { std::cout << e.what() << '\n'; }
+}
+
 BitcoinExchange::BitcoinExchange(const BitcoinExchange& other) { *this = other; }
 
 BitcoinExchange::~BitcoinExchange() {}
@@ -30,8 +38,8 @@ void BitcoinExchange::mapDatabase() {
 	}
 
 	if (dbFile.bad()) {
-		std::perror(("Error while reading file " + filename).c_str());
-		throw std::exception(); // TODO créer what() avec std::runtime_error
+		std::string err_msg = "Error while reading file " + filename + " " + std::strerror(errno);
+		throw std::runtime_error(err_msg);
 	}
 }
 
@@ -47,7 +55,7 @@ void BitcoinExchange::processInput(std::string file) {
 			continue;
 
 		size_t pipePos = line.find('|');
-		if (pipePos != 11) {
+		if (pipePos != 11 || line.length() < 13 || line[12] != ' ') {
 			std::cout << ERROR << "bad input => " << line << '\n';
 			continue;
 		}
@@ -60,6 +68,11 @@ void BitcoinExchange::processInput(std::string file) {
 
 		_printValue(date, value);
 	}
+
+	if (inputFile.bad()) {
+		std::string err_msg = ERROR "Error while reading file " + file + " " + std::strerror(errno);
+		throw std::runtime_error(err_msg);
+	}
 }
 
 /* Private Methods */
@@ -68,14 +81,14 @@ void BitcoinExchange::_checkAndSkipHeader(std::string filename, std::ifstream& f
 	std::string line;
 
 	if (filestream.is_open() == false) {
-		std::perror(("Error while opening file " + filename).c_str());
-		throw std::exception();
+		std::string err_msg = ERROR + filename + ": " + strerror(errno);
+		throw std::runtime_error(err_msg);
 	}
 
 	std::getline(filestream, line);
 	if (line != header) {
-		std::cout << ERROR << filename << ": Invalid header";
-		throw std::exception();
+		std::string err_msg = ERROR + filename + ": Invalid header";
+		throw std::runtime_error(err_msg);
 	}
 }
 
