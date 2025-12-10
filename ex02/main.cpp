@@ -1,5 +1,9 @@
 #include "PmergeMe.hpp"
 
+/*
+./PmergeMe `shuf -i 1-100000 -n 3000 | tr "\n" " "`
+ */
+
 bool parseValues(char **argv) {
 	for (size_t i = 0; argv[i]; i++) {
 		char *endptr = NULL;
@@ -21,7 +25,7 @@ int main(int argc, char **argv) {
 	PmergeMe FJMI(argv);
 
 	FJMI.printValues("Before");
-	FJMI.runSort();
+	FJMI.runBenchmarks();
 	FJMI.printValues("After");
 
 	std::cout << '\n';

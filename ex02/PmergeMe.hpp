@@ -1,10 +1,12 @@
 #pragma once
 
 #include <cstdlib>
-#include <ctime>
 #include <deque>
+#include <iomanip>
 #include <iostream>
 #include <string>
+#include <sys/time.h>
+#include <unistd.h>
 #include <vector>
 
 class PmergeMe {
@@ -18,12 +20,16 @@ class PmergeMe {
 
 	/* Methods */
 	void printValues(std::string prefix);
-	void runSort();
-	void printBenchmark();
+	void runBenchmarks();
+	void printBenchmark() const;
 
   private:
 	PmergeMe();
 	void _fillContainers(char **argv);
+	double _getTime() const;
+	void _sortVec();
+	double _vecTime;
+	double _deqTime;
 	std::deque<int> _deq;
 	std::vector<int> _vec;
 };

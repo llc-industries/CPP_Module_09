@@ -2,36 +2,56 @@
 
 /* Canonical orthodox */
 
-PmergeMe::PmergeMe() {}
+PmergeMe::PmergeMe() : _vecTime(0), _deqTime(0) {}
 
-PmergeMe::PmergeMe(char **argv) { _fillContainers(argv); }
+PmergeMe::PmergeMe(char **argv) : _vecTime(0), _deqTime(0) {
+	_fillContainers(argv);
+}
 
-PmergeMe::PmergeMe(const PmergeMe &other) { (void)other; }
+PmergeMe::PmergeMe(const PmergeMe &other) {
+	_vecTime = other._vecTime;
+	_deqTime = other._deqTime;
+}
 
 PmergeMe::~PmergeMe() {}
 
 PmergeMe &PmergeMe::operator=(const PmergeMe &other) {
-	(void)other;
+	_vecTime = other._vecTime;
+	_deqTime = other._deqTime;
+	_vec = other._vec;
+	_deq = other._deq;
 	return *this;
 }
 
 /* Methods */
 
 void PmergeMe::printValues(std::string prefix) {
+	int i = 0;
 	std::cout << prefix + ": ";
-	for (std::vector<int>::iterator it = _vec.begin(); it != _vec.end(); ++it)
+
+	for (std::vector<int>::iterator it = _vec.begin(); it != _vec.end(); ++it) {
 		std::cout << *it << ' ';
+		i++;
+		if (i > 10) {
+			std::cout << "[...]\n";
+			return;
+		}
+	}
 	std::cout << '\n';
 }
 
-void PmergeMe::runSort() {}
+void PmergeMe::runBenchmarks() {
+	double start = _getTime();
+	_sortVec();
+	_vecTime = _getTime() - start;
+}
 
-void PmergeMe::printBenchmark() {
+void PmergeMe::printBenchmark() const {
 	std::cout << "Time to process a range of " << _vec.size()
-			  << " with std::vector : ";
+			  << " with std::vector : " << _vecTime << "us\n";
 
 	std::cout << "Time to process a range of " << _deq.size()
-			  << " with std::deque : ";
+			  << " with std::deque : " << _deqTime << "us\n";
 }
 
 void PmergeMe::_fillContainers(char **argv) {
@@ -41,3 +61,11 @@ void PmergeMe::_fillContainers(char **argv) {
 		_deq.push_back(static_cast<int>(value));
 	}
 }
+
+double PmergeMe::_getTime() const {
+	struct timeval now;
+	gettimeofday(&now, NULL);
+	return (now.tv_sec * 1000000.0 + now.tv_usec);
+}
+
+void PmergeMe::_sortVec() { usleep(500); }
