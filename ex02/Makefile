@@ -1,8 +1,8 @@
-NAME = RPN
+NAME = PmergeMe
 CC = c++
 CFLAGS = -std=c++98 -Wall -Wextra -Werror
 
-SRCS = main.cpp RPN.cpp
+SRCS = main.cpp PmergeMe.cpp
 OBJ_DIR = obj
 OBJ = $(SRCS:%.cpp=$(OBJ_DIR)/%.o)
 

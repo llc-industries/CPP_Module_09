@@ -25,7 +25,7 @@ BitcoinExchange& BitcoinExchange::operator= (const BitcoinExchange& other) {
 /* Public Methods */
 
 void BitcoinExchange::mapDatabase() {
-	std::string filename("misc/data.csv");
+	std::string filename("data.csv");
 	std::ifstream dbFile(filename.c_str());
 	std::string line;
 
