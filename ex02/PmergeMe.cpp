@@ -4,7 +4,7 @@
 
 PmergeMe::PmergeMe() {}
 
-PmergeMe::PmergeMe(char **argv) { _parseValuesFillContainers(argv); }
+PmergeMe::PmergeMe(char **argv) { _fillContainers(argv); }
 
 PmergeMe::PmergeMe(const PmergeMe &other) { (void)other; }
 
@@ -17,21 +17,27 @@ PmergeMe &PmergeMe::operator=(const PmergeMe &other) {
 
 /* Methods */
 
-void PmergeMe::printValues() {
-	std::cout << "Before: ";
+void PmergeMe::printValues(std::string prefix) {
+	std::cout << prefix + ": ";
 	for (std::vector<int>::iterator it = _vec.begin(); it != _vec.end(); ++it)
 		std::cout << *it << ' ';
+	std::cout << '\n';
 }
 
-void PmergeMe::_parseValuesFillContainers(char **argv) {
+void PmergeMe::runSort() {}
+
+void PmergeMe::printBenchmark() {
+	std::cout << "Time to process a range of " << _vec.size()
+			  << " with std::vector : ";
+
+	std::cout << "Time to process a range of " << _deq.size()
+			  << " with std::deque : ";
+}
+
+void PmergeMe::_fillContainers(char **argv) {
 	for (size_t i = 0; argv[i]; i++) {
-		char *endptr = NULL;
-		long long value = strtol(argv[i], &endptr, 10);
-
-		if (*endptr != NULL || value < 0 || value > __INT32_MAX__)
-			throw std::runtime_error("Error\n");
-
-		_deq.push_back(static_cast<int>(value));
+		long long value = strtol(argv[i], NULL, 10);
 		_vec.push_back(static_cast<int>(value));
+		_deq.push_back(static_cast<int>(value));
 	}
 }

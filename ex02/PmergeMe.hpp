@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstdlib>
+#include <ctime>
 #include <deque>
 #include <iostream>
 #include <string>
@@ -9,17 +11,19 @@ class PmergeMe {
 
   public:
 	/* Canonical orthodox */
-	PmergeMe();
 	PmergeMe(char **argv);
 	PmergeMe(const PmergeMe &other);
 	~PmergeMe();
 	PmergeMe &operator=(const PmergeMe &other);
 
 	/* Methods */
-	void printValues();
+	void printValues(std::string prefix);
+	void runSort();
+	void printBenchmark();
 
   private:
-	void _parseValuesFillContainers(char **argv);
+	PmergeMe();
+	void _fillContainers(char **argv);
 	std::deque<int> _deq;
 	std::vector<int> _vec;
 };
