@@ -30,12 +30,12 @@ void PmergeMe::printValues(std::string prefix) {
 	std::cout << prefix + ": ";
 
 	for (std::vector<int>::iterator it = _vec.begin(); it != _vec.end(); ++it) {
-		std::cout << *it << ' ';
-		i++;
-		if (i > 10) {
+		if (i > 9) {
 			std::cout << "[...]\n";
 			return;
 		}
+		std::cout << *it << ' ';
+		i++;
 	}
 	std::cout << '\n';
 }
@@ -68,4 +68,4 @@ double PmergeMe::_getTime() const {
 	return (now.tv_sec * 1000000.0 + now.tv_usec);
 }
 
-void PmergeMe::_sortVec() { usleep(500); }
+void PmergeMe::_sortVec() {}

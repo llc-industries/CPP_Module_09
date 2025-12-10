@@ -2,11 +2,9 @@
 
 #include <cstdlib>
 #include <deque>
-#include <iomanip>
 #include <iostream>
 #include <string>
 #include <sys/time.h>
-#include <unistd.h>
 #include <vector>
 
 class PmergeMe {
