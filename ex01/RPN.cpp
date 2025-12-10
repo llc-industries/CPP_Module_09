@@ -5,15 +5,21 @@
 RPN::RPN() {}
 
 RPN::RPN(std::string input) {
-	try { std::cout << getResult(input) << '\n'; }
-	catch(const std::exception&e) { std::cerr << e.what(); }
+	try {
+		std::cout << getResult(input) << '\n';
+	} catch (const std::exception &e) {
+		std::cerr << e.what();
+	}
 }
 
-RPN::RPN(const RPN& other) { (void)other; }
+RPN::RPN(const RPN &other) { (void)other; }
 
 RPN::~RPN() {}
 
-RPN& RPN::operator=(const RPN& other) { (void)other; return *this; }
+RPN &RPN::operator=(const RPN &other) {
+	(void)other;
+	return *this;
+}
 
 /* Methods */
 
@@ -38,22 +44,28 @@ int RPN::getResult(std::string input) {
 	return stack.top();
 }
 
-void RPN::_performOperation(std::stack<int>& stack, char op) {
-	int right = stack.top(); stack.pop();
-	int left = stack.top(); stack.pop();
+void RPN::_performOperation(std::stack<int> &stack, char op) {
+	int right = stack.top();
+	stack.pop();
+	int left = stack.top();
+	stack.pop();
 	int result = 0;
 
 	switch (op) {
 	case '+':
-		result = left + right; break;
+		result = left + right;
+		break;
 	case '-':
-		result = left - right; break;
+		result = left - right;
+		break;
 	case '*':
-		result = left * right; break;
+		result = left * right;
+		break;
 	case '/':
 		if (right == 0)
 			throw std::runtime_error("Error\n");
-		result = left / right; break;
+		result = left / right;
+		break;
 
 	default:
 		throw std::runtime_error("Error\n");

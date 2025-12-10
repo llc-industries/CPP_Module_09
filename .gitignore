@@ -1,4 +1,5 @@
 .vscode
+.clang-format
 */.vscode
 */obj
 ex00/btc

@@ -1,21 +1,20 @@
 #pragma once
 
 #include <iostream>
-#include <string>
 #include <stack>
+#include <string>
 
 class RPN {
 
-public:
-/* Canonical orthodox */
+  public:
+	/* Canonical orthodox */
 	RPN();
 	RPN(std::string input);
-	RPN(const RPN& other);
+	RPN(const RPN &other);
 	~RPN();
-	RPN& operator= (const RPN& other);
+	RPN &operator=(const RPN &other);
 	int getResult(std::string input);
 
-private:
-	void _performOperation(std::stack<int>& stack, char op);
+  private:
+	void _performOperation(std::stack<int> &stack, char op);
 };
-
