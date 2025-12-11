@@ -26,6 +26,7 @@ class PmergeMe {
 	void _fillContainers(char **argv);
 	double _getTime() const;
 	void _sortVec();
+	void _fordJohnson(std::vector<int> &vec);
 	double _vecTime;
 	double _deqTime;
 	std::deque<int> _deq;

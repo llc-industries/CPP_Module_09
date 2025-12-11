@@ -68,4 +68,14 @@ double PmergeMe::_getTime() const {
 	return (now.tv_sec * 1000000.0 + now.tv_usec);
 }
 
-void PmergeMe::_sortVec() {}
+void PmergeMe::_sortVec() { _fordJohnson(_vec); }
+
+void PmergeMe::_fordJohnson(std::vector<int> &vec) {
+	if (vec.size() < 2)
+		return;
+
+	// Handle straggler (last if uneven)
+
+	std::vector<int> winners;
+	std::vector<int> losers;
+}
