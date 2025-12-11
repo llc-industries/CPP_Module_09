@@ -1,14 +1,14 @@
 #pragma once
 
+#include <sys/time.h>
+
 #include <cstdlib>
 #include <deque>
 #include <iostream>
 #include <string>
-#include <sys/time.h>
 #include <vector>
 
 class PmergeMe {
-
   public:
 	/* Canonical orthodox */
 	PmergeMe(char **argv);

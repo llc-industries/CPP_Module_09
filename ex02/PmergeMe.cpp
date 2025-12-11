@@ -71,11 +71,31 @@ double PmergeMe::_getTime() const {
 void PmergeMe::_sortVec() { _fordJohnson(_vec); }
 
 void PmergeMe::_fordJohnson(std::vector<int> &vec) {
+	// Base case for recursion
 	if (vec.size() < 2)
 		return;
 
-	// Handle straggler (last if uneven)
+	// Handle straggler (if size is odd)
+	int straggler = -1;
+	if (vec.size() % 2 != 0) {
+		straggler = vec.back();
+		vec.pop_back();
+	}
 
 	std::vector<int> winners;
-	std::vector<int> losers;
+	std::vector<std::pair<int, int> > pairs;
+
+	// Separate winners / Keep track of win/loose relation within recursion
+	for (size_t i = 0; i < vec.size(); i += 2) {
+		int a = vec[i];
+		int b = vec[i + 1];
+
+		if (a < b)
+			std::swap(a, b);
+
+		winners.push_back(a);
+		pairs.push_back(std::make_pair(a, b));
+	}
+	_fordJohnson(winners);
+	vec = winners;
 }
