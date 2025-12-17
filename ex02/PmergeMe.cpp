@@ -56,7 +56,7 @@ void PmergeMe::printBenchmark() const {
 
 void PmergeMe::_fillContainers(char **argv) {
 	for (size_t i = 0; argv[i]; i++) {
-		long long value = strtol(argv[i], NULL, 10);
+		long value = strtol(argv[i], NULL, 10);
 		_vec.push_back(static_cast<int>(value));
 		_deq.push_back(static_cast<int>(value));
 	}
@@ -85,7 +85,8 @@ void PmergeMe::_fordJohnson(std::vector<int> &vec) {
 	std::vector<int> winners;
 	std::vector<std::pair<int, int> > pairs;
 
-	// Separate winners / Keep track of win/loose relation within recursion
+	// Separate winners / Keep track of win/loose relation within recursion in
+	// vector::pairs
 	for (size_t i = 0; i < vec.size(); i += 2) {
 		int a = vec[i];
 		int b = vec[i + 1];
@@ -96,6 +97,22 @@ void PmergeMe::_fordJohnson(std::vector<int> &vec) {
 		winners.push_back(a);
 		pairs.push_back(std::make_pair(a, b));
 	}
-	_fordJohnson(winners);
+
+	_fordJohnson(winners); // Recursion -> get all winners in vec (size / 2)
+
+	std::vector<int> pend;
+
+	for (size_t i = 0; i < winners.size(); i++) { // Add loser to pend
+		for (size_t j = 0; j < pairs.size(); j++) {
+			if (pairs[j].first == winners[i]) { // Loser found
+				pend.push_back(pairs[j].second);
+				pairs.erase(pairs.begin() + j); // Loser now in pend, delete
+				break;
+			}
+		}
+	}
+
+	winners.insert(winners.begin(), pend[0]); // Pend is smaller than winner
+
 	vec = winners;
 }
