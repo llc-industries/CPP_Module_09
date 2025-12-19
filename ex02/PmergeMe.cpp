@@ -112,7 +112,20 @@ void PmergeMe::_fordJohnson(std::vector<int> &vec) {
 		}
 	}
 
-	winners.insert(winners.begin(), pend[0]); // Pend is smaller than winner
+	if (pend.empty() == false)
+		winners.insert(winners.begin(), pend[0]); // Pend < winner in same idx
+
+	for (size_t i = 1; i < pend.size(); i++) {
+		std::vector<int>::iterator it =
+			std::lower_bound(winners.begin(), winners.end(), pend[i]);
+		winners.insert(it, pend[i]);
+	}
+
+	if (straggler != -1) { // Put straggler back
+		std::vector<int>::iterator pos =
+			std::lower_bound(winners.begin(), winners.end(), straggler);
+		winners.insert(pos, straggler);
+	}
 
 	vec = winners;
 }
