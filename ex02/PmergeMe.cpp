@@ -42,7 +42,7 @@ void PmergeMe::printValues(std::string prefix) {
 
 void PmergeMe::runBenchmarks() {
 	double start = _getTime();
-	_sortVec();
+	_fordJohnson(_vec);
 	_vecTime = _getTime() - start;
 }
 
@@ -67,8 +67,6 @@ double PmergeMe::_getTime() const {
 	gettimeofday(&now, NULL);
 	return (now.tv_sec * 1000000.0 + now.tv_usec);
 }
-
-void PmergeMe::_sortVec() { _fordJohnson(_vec); }
 
 void PmergeMe::_fordJohnson(std::vector<int> &vec) {
 	// Base case for recursion
@@ -115,12 +113,6 @@ void PmergeMe::_fordJohnson(std::vector<int> &vec) {
 	if (pend.empty() == false)
 		winners.insert(winners.begin(), pend[0]); // Pend < winner in same idx
 
-	for (size_t i = 1; i < pend.size(); i++) {
-		std::vector<int>::iterator it =
-			std::lower_bound(winners.begin(), winners.end(), pend[i]);
-		winners.insert(it, pend[i]);
-	}
-
 	if (straggler != -1) { // Put straggler back
 		std::vector<int>::iterator pos =
 			std::lower_bound(winners.begin(), winners.end(), straggler);
@@ -128,4 +120,23 @@ void PmergeMe::_fordJohnson(std::vector<int> &vec) {
 	}
 
 	vec = winners;
+}
+
+std::vector<size_t> genJacobst(size_t pendSize) {
+	std::vector<size_t> jacob;
+	jacob.push_back(1);
+	jacob.push_back(3);
+
+	size_t prev = 3;
+	size_t prev_prev = 1;
+
+	while (42) {
+		size_t next = prev + 2 * prev_prev;
+		jacob.push_back(next);
+		if (next > pendSize)
+			break;
+		prev_prev = prev;
+		prev = next;
+	}
+	return jacob;
 }
