@@ -30,6 +30,8 @@ int main(int argc, char **argv) {
 
 	std::cout << '\n';
 	FJMI.printBenchmark();
+	FJMI.isVecSorted();
+	FJMI.isDeqSorted();
 
 	return 0;
 }
