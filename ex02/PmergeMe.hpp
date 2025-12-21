@@ -18,8 +18,8 @@ class PmergeMe {
 
 	/* Methods */
 	void printValues(std::string prefix);
-	void runBenchmarks();
 	void printBenchmark() const;
+	void runBenchmarks();
 
   private:
 	PmergeMe();

@@ -40,12 +40,6 @@ void PmergeMe::printValues(std::string prefix) {
 	std::cout << '\n';
 }
 
-void PmergeMe::runBenchmarks() {
-	double start = _getTime();
-	_fordJohnson(_vec);
-	_vecTime = _getTime() - start;
-}
-
 void PmergeMe::printBenchmark() const {
 	std::cout << "Time to process a range of " << _vec.size()
 			  << " with std::vector : " << _vecTime << "us\n";
@@ -53,6 +47,14 @@ void PmergeMe::printBenchmark() const {
 	std::cout << "Time to process a range of " << _deq.size()
 			  << " with std::deque : " << _deqTime << "us\n";
 }
+
+void PmergeMe::runBenchmarks() {
+	double start = _getTime();
+	_fordJohnson(_vec);
+	_vecTime = _getTime() - start;
+}
+
+/* Private Methods */
 
 void PmergeMe::_fillContainers(char **argv) {
 	for (size_t i = 0; argv[i]; i++) {
@@ -67,6 +69,8 @@ double PmergeMe::_getTime() const {
 	gettimeofday(&now, NULL);
 	return (now.tv_sec * 1000000.0 + now.tv_usec);
 }
+
+/* Ford Johnson with std::vector */
 
 void PmergeMe::_fordJohnson(std::vector<int> &vec) {
 	// Base case for recursion
@@ -104,7 +108,7 @@ void PmergeMe::_fordJohnson(std::vector<int> &vec) {
 		for (size_t j = 0; j < pairs.size(); j++) {
 			if (pairs[j].first == winners[i]) { // Loser found
 				pend.push_back(pairs[j].second);
-				pairs.erase(pairs.begin() + j); // Loser now in pend, delete
+				pairs.erase(pairs.begin() + j); // Loser now in pend, delt pair
 				break;
 			}
 		}
@@ -112,6 +116,15 @@ void PmergeMe::_fordJohnson(std::vector<int> &vec) {
 
 	if (pend.empty() == false)
 		winners.insert(winners.begin(), pend[0]); // Pend < winner in same idx
+
+	size_t last_inserted = 0;
+	std::vector<size_t> jacob = genJacobst(pend.size());
+
+	for (size_t i = 1; i < jacob.size(); i++) { // Binary insertion
+		size_t index = jacob[i] - 1;
+		if (index >= pend.size())
+			index = pend.size() - 1;
+	}
 
 	if (straggler != -1) { // Put straggler back
 		std::vector<int>::iterator pos =
@@ -122,7 +135,7 @@ void PmergeMe::_fordJohnson(std::vector<int> &vec) {
 	vec = winners;
 }
 
-std::vector<size_t> genJacobst(size_t pendSize) {
+std::vector<size_t> PmergeMe::genJacobst(size_t pendSize) {
 	std::vector<size_t> jacob;
 	jacob.push_back(1);
 	jacob.push_back(3);
