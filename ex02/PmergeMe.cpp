@@ -64,7 +64,7 @@ void PmergeMe::isVecSorted() {
 	}
 	for (size_t i = 1; i < _vec.size(); i++) {
 		if (_vec[i - 1] > _vec[i]) {
-			std::cout << "Error deq not sorted\n";
+			std::cout << "Error vec not sorted\n";
 			return;
 		}
 	}

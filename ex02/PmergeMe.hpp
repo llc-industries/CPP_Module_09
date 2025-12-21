@@ -2,6 +2,7 @@
 
 #include <sys/time.h>
 
+#include <algorithm>
 #include <cstdlib>
 #include <deque>
 #include <iostream>
