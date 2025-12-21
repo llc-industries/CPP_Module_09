@@ -121,9 +121,17 @@ void PmergeMe::_fordJohnson(std::vector<int> &vec) {
 	std::vector<size_t> jacob = genJacobst(pend.size());
 
 	for (size_t i = 1; i < jacob.size(); i++) { // Binary insertion
-		size_t index = jacob[i] - 1;
+		size_t index = jacob[i] - 1;			// Get jacob idx
 		if (index >= pend.size())
 			index = pend.size() - 1;
+
+		while (index > last_inserted) { // Binay insertion using jacob
+			std::vector<int>::iterator it =
+				std::lower_bound(winners.begin(), winners.end(), pend[index]);
+			winners.insert(it, pend[index]);
+			index--;
+		}
+		last_inserted = jacob[i] - 1; // Update for next pair
 	}
 
 	if (straggler != -1) { // Put straggler back
