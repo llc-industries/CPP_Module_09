@@ -212,11 +212,12 @@ void PmergeMe::_fordJohnson(std::deque<int> &deq) {
 
 	_fordJohnson(winners);
 
+	std::deque<int> partners = winners;
 	std::deque<int> pend;
 
 	for (size_t i = 0; i < winners.size(); i++) {
 		for (size_t j = 0; j < pairs.size(); j++) {
-			if (pairs[j].first == winners[i]) {
+			if (pairs[j].first == partners[i]) {
 				pend.push_back(pairs[j].second);
 				pairs[j] = pairs.back();
 				pairs.pop_back();
@@ -227,8 +228,8 @@ void PmergeMe::_fordJohnson(std::deque<int> &deq) {
 
 	if (pend.empty() == false)
 		winners.insert(winners.begin(), pend[0]);
-
 	size_t last_inserted = 0;
+
 	std::deque<size_t> jacob;
 	_genJacobst(pend.size(), jacob);
 
@@ -238,8 +239,12 @@ void PmergeMe::_fordJohnson(std::deque<int> &deq) {
 			index = pend.size() - 1;
 
 		while (index > last_inserted) {
+			std::deque<int>::iterator upperBound =
+				std::find(winners.begin(), winners.end(), partners[index]);
+
 			std::deque<int>::iterator it =
-				std::lower_bound(winners.begin(), winners.end(), pend[index]);
+				std::lower_bound(winners.begin(), upperBound, pend[index]);
+
 			winners.insert(it, pend[index]);
 			index--;
 		}
