@@ -135,11 +135,12 @@ void PmergeMe::_fordJohnson(std::vector<int> &vec) {
 
 	_fordJohnson(winners); // Recursion -> get all winners in vec (size / 2)
 
+	std::vector<int> partners = winners; // Keep winner state for insert
 	std::vector<int> pend;
 
 	for (size_t i = 0; i < winners.size(); i++) { // Loop add loser to pend
 		for (size_t j = 0; j < pairs.size(); j++) {
-			if (pairs[j].first == winners[i]) { // Loser found
+			if (pairs[j].first == partners[i]) { // Loser found
 				pend.push_back(pairs[j].second);
 				pairs[j] = pairs.back(); // Loser in pend,
 				pairs.pop_back();		 // so we delete Loser from pairs
@@ -161,8 +162,13 @@ void PmergeMe::_fordJohnson(std::vector<int> &vec) {
 			index = pend.size() - 1;
 
 		while (index > last_inserted) { // Binay insertion using jacob
+			std::vector<int>::iterator upperBound =
+				std::find(winners.begin(), winners.end(),
+						  partners[index]); // Find insert upper bound
+
 			std::vector<int>::iterator it = std::lower_bound(
-				winners.begin(), winners.end(), pend[index], Comp(totalComp));
+				winners.begin(), upperBound, pend[index], Comp(totalComp));
+
 			winners.insert(it, pend[index]);
 			index--;
 		}
