@@ -26,6 +26,16 @@ class PmergeMe {
 	void isSorted();
 	int totalComp;
 
+	/* Functor for comparisons */
+	struct Comp {
+		Comp(int &counter) : count(counter) {}
+		int &count;
+		bool operator()(const int &a, const int &b) {
+			count++;
+			return a < b;
+		}
+	};
+
   private:
 	PmergeMe();
 	void _fillContainers(char **argv);

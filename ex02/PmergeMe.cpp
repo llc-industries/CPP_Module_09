@@ -112,7 +112,7 @@ void PmergeMe::_fordJohnson(std::vector<int> &vec) {
 		int a = vec[i];
 		int b = vec[i + 1];
 
-		if (a < b)
+		if (Comp(totalComp)(a, b))
 			std::swap(a, b);
 
 		winners.push_back(a);
@@ -147,8 +147,8 @@ void PmergeMe::_fordJohnson(std::vector<int> &vec) {
 			index = pend.size() - 1;
 
 		while (index > last_inserted) { // Binay insertion using jacob
-			std::vector<int>::iterator it =
-				std::lower_bound(winners.begin(), winners.end(), pend[index]);
+			std::vector<int>::iterator it = std::lower_bound(
+				winners.begin(), winners.end(), pend[index], Comp(totalComp));
 			winners.insert(it, pend[index]);
 			index--;
 		}
@@ -156,8 +156,8 @@ void PmergeMe::_fordJohnson(std::vector<int> &vec) {
 	}
 
 	if (straggler != -1) { // Put straggler back
-		std::vector<int>::iterator pos =
-			std::lower_bound(winners.begin(), winners.end(), straggler);
+		std::vector<int>::iterator pos = std::lower_bound(
+			winners.begin(), winners.end(), straggler, Comp(totalComp));
 		winners.insert(pos, straggler);
 	}
 
