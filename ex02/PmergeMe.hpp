@@ -3,6 +3,8 @@
 #include <sys/time.h>
 
 #include <algorithm>
+#include <climits>
+#include <cmath>
 #include <cstdlib>
 #include <deque>
 #include <iostream>
@@ -21,19 +23,23 @@ class PmergeMe {
 	void printValues(std::string prefix);
 	void printBenchmark() const;
 	void runBenchmarks();
-	void isVecSorted();
-	void isDeqSorted();
+	void isSorted();
+	int totalComp;
 
   private:
 	PmergeMe();
 	void _fillContainers(char **argv);
 	double _getTime() const;
-	void _fordJohnson(std::vector<int> &vec);
-	void _fordJohnson(std::deque<int> &deq);
+
+	/* Vector */
 	double _vecTime;
+	std::vector<int> _vec;
+	void _fordJohnson(std::vector<int> &vec);
+
+	/* Deque */
 	double _deqTime;
 	std::deque<int> _deq;
-	std::vector<int> _vec;
+	void _fordJohnson(std::deque<int> &deq);
 
 	template <typename T> void _genJacobst(size_t pendSize, T &ctr) {
 		ctr.push_back(1);

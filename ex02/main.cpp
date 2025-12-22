@@ -7,9 +7,8 @@
 bool parseValues(char **argv) {
 	for (size_t i = 0; argv[i]; i++) {
 		char *endptr = NULL;
-		long long value = std::strtoll(argv[i], &endptr, 10);
-
-		if (*endptr != '\0' || value < 0 || value > __INT32_MAX__)
+		long value = std::strtol(argv[i], &endptr, 10);
+		if (*endptr != '\0' || value < 0 || value > INT_MAX)
 			return false;
 	}
 	return true;
@@ -27,12 +26,9 @@ int main(int argc, char **argv) {
 	FJMI.printValues("Before");
 	FJMI.runBenchmarks();
 	FJMI.printValues("After");
-
-	std::cout << '\n';
 	FJMI.printBenchmark();
 
-	/* FJMI.isVecSorted();
-	FJMI.isDeqSorted(); */
+	FJMI.isSorted();
 
 	return 0;
 }

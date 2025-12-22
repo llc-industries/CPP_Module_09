@@ -2,15 +2,18 @@
 
 /* Canonical orthodox */
 
-PmergeMe::PmergeMe() : _vecTime(0), _deqTime(0) {}
+PmergeMe::PmergeMe() : totalComp(0), _vecTime(0), _deqTime(0) {}
 
-PmergeMe::PmergeMe(char **argv) : _vecTime(0), _deqTime(0) {
+PmergeMe::PmergeMe(char **argv) : totalComp(0), _vecTime(0), _deqTime(0) {
 	_fillContainers(argv);
 }
 
 PmergeMe::PmergeMe(const PmergeMe &other) {
 	_vecTime = other._vecTime;
 	_deqTime = other._deqTime;
+	_vec = other._vec;
+	_deq = other._deq;
+	totalComp = other.totalComp;
 }
 
 PmergeMe::~PmergeMe() {}
@@ -20,6 +23,7 @@ PmergeMe &PmergeMe::operator=(const PmergeMe &other) {
 	_deqTime = other._deqTime;
 	_vec = other._vec;
 	_deq = other._deq;
+	totalComp = other.totalComp;
 	return *this;
 }
 
@@ -41,7 +45,7 @@ void PmergeMe::printValues(std::string prefix) {
 }
 
 void PmergeMe::printBenchmark() const {
-	std::cout << "Time to process a range of " << _vec.size()
+	std::cout << "\nTime to process a range of " << _vec.size()
 			  << " with std::vector : " << _vecTime << "us\n";
 
 	std::cout << "Time to process a range of " << _deq.size()
@@ -57,32 +61,18 @@ void PmergeMe::runBenchmarks() {
 	_deqTime = _getTime() - start;
 }
 
-void PmergeMe::isVecSorted() {
+void PmergeMe::isSorted() {
 	if (_vec.size() < 2) {
-		std::cout << "Vec is sorted\n";
+		std::cout << "is sorted\n";
 		return;
 	}
 	for (size_t i = 1; i < _vec.size(); i++) {
 		if (_vec[i - 1] > _vec[i]) {
-			std::cout << "Error vec not sorted\n";
+			std::cout << "Error not sorted\n";
 			return;
 		}
 	}
-	std::cout << "Vec is sorted\n";
-}
-
-void PmergeMe::isDeqSorted() {
-	if (_deq.size() < 2) {
-		std::cout << "Vec is sorted\n";
-		return;
-	}
-	for (size_t i = 1; i < _deq.size(); i++) {
-		if (_deq[i - 1] > _deq[i]) {
-			std::cout << "Error deq not sorted\n";
-			return;
-		}
-	}
-	std::cout << "Deq is sorted\n";
+	std::cout << "is sorted\n";
 }
 
 /* Private Methods */
@@ -104,12 +94,10 @@ double PmergeMe::_getTime() const {
 /* Ford Johnson with std::vector */
 
 void PmergeMe::_fordJohnson(std::vector<int> &vec) {
-	// Base case for recursion
 	if (vec.size() < 2)
 		return;
 
-	// Handle straggler (if size is odd)
-	int straggler = -1;
+	int straggler = -1; // Handle odd number
 	if (vec.size() % 2 != 0) {
 		straggler = vec.back();
 		vec.pop_back();
@@ -135,20 +123,21 @@ void PmergeMe::_fordJohnson(std::vector<int> &vec) {
 
 	std::vector<int> pend;
 
-	for (size_t i = 0; i < winners.size(); i++) { // Add loser to pend
+	for (size_t i = 0; i < winners.size(); i++) { // Loop add loser to pend
 		for (size_t j = 0; j < pairs.size(); j++) {
 			if (pairs[j].first == winners[i]) { // Loser found
 				pend.push_back(pairs[j].second);
-				pairs.erase(pairs.begin() + j); // Loser now in pend, delt pair
+				pairs[j] = pairs.back(); // Loser in pend,
+				pairs.pop_back();		 // so we delete Loser from pairs
 				break;
 			}
 		}
 	}
 
 	if (pend.empty() == false)
-		winners.insert(winners.begin(), pend[0]); // Pend < winner in same idx
-
+		winners.insert(winners.begin(), pend[0]); // Pend[0] < winner[0]
 	size_t last_inserted = 0;
+
 	std::vector<size_t> jacob;
 	_genJacobst(pend.size(), jacob);
 
@@ -178,11 +167,9 @@ void PmergeMe::_fordJohnson(std::vector<int> &vec) {
 /* Ford Johnson with std::deque */
 
 void PmergeMe::_fordJohnson(std::deque<int> &deq) {
-	// Base case for recursion
 	if (deq.size() < 2)
 		return;
 
-	// Handle straggler (if size is odd)
 	int straggler = -1;
 	if (deq.size() % 2 != 0) {
 		straggler = deq.back();
@@ -192,8 +179,6 @@ void PmergeMe::_fordJohnson(std::deque<int> &deq) {
 	std::deque<int> winners;
 	std::deque<std::pair<int, int> > pairs;
 
-	// Separate winners / Keep track of win/loose relation within recursion in
-	// deque::pairs
 	for (size_t i = 0; i < deq.size(); i += 2) {
 		int a = deq[i];
 		int b = deq[i + 1];
@@ -205,42 +190,43 @@ void PmergeMe::_fordJohnson(std::deque<int> &deq) {
 		pairs.push_back(std::make_pair(a, b));
 	}
 
-	_fordJohnson(winners); // Recursion -> get all winners in vec (size / 2)
+	_fordJohnson(winners);
 
 	std::deque<int> pend;
 
-	for (size_t i = 0; i < winners.size(); i++) { // Add loser to pend
+	for (size_t i = 0; i < winners.size(); i++) {
 		for (size_t j = 0; j < pairs.size(); j++) {
-			if (pairs[j].first == winners[i]) { // Loser found
+			if (pairs[j].first == winners[i]) {
 				pend.push_back(pairs[j].second);
-				pairs.erase(pairs.begin() + j); // Loser now in pend, delt pair
+				pairs[j] = pairs.back();
+				pairs.pop_back();
 				break;
 			}
 		}
 	}
 
 	if (pend.empty() == false)
-		winners.insert(winners.begin(), pend[0]); // Pend < winner in same idx
+		winners.insert(winners.begin(), pend[0]);
 
 	size_t last_inserted = 0;
 	std::deque<size_t> jacob;
 	_genJacobst(pend.size(), jacob);
 
-	for (size_t i = 1; i < jacob.size(); i++) { // Binary insertion
-		size_t index = jacob[i] - 1;			// Get jacob idx
+	for (size_t i = 1; i < jacob.size(); i++) {
+		size_t index = jacob[i] - 1;
 		if (index >= pend.size())
 			index = pend.size() - 1;
 
-		while (index > last_inserted) { // Binay insertion using jacob
+		while (index > last_inserted) {
 			std::deque<int>::iterator it =
 				std::lower_bound(winners.begin(), winners.end(), pend[index]);
 			winners.insert(it, pend[index]);
 			index--;
 		}
-		last_inserted = jacob[i] - 1; // Update for next pair
+		last_inserted = jacob[i] - 1;
 	}
 
-	if (straggler != -1) { // Put straggler back
+	if (straggler != -1) {
 		std::deque<int>::iterator pos =
 			std::lower_bound(winners.begin(), winners.end(), straggler);
 		winners.insert(pos, straggler);
