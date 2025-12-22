@@ -21,9 +21,9 @@ class PmergeMe {
 
 	/* Methods */
 	void printValues(std::string prefix);
-	void printBenchmark() const;
 	void runBenchmarks();
-	void isSorted();
+	void printBenchmark() const;
+	void isSorted() const;
 	static int getWorstCase(int size);
 	int totalComp;
 

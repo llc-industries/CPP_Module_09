@@ -1,6 +1,7 @@
 NAME = PmergeMe
 CC = c++
 CFLAGS = -std=c++98 -MMD -Wall -Wextra -Werror -O3
+FULL ?= 0
 
 SRCS = main.cpp PmergeMe.cpp
 OBJ_DIR = obj
@@ -10,13 +11,16 @@ DEPS = $(OBJ:.o=.d)
 all: $(NAME)
 
 $(NAME): $(OBJ)
-	$(CC) $(CFLAGS) $(OBJ) -o $(NAME)
+	$(CC) $(CFLAGS) -DFULL=$(FULL) $(OBJ) -o $(NAME)
 
 $(OBJ_DIR)/%.o: %.cpp | $(OBJ_DIR)
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) -DFULL=$(FULL) -c $< -o $@
 
 $(OBJ_DIR):
 	mkdir -p $(OBJ_DIR)
+
+full: FULL = 1
+full: re
 
 clean:
 	rm -rf $(OBJ_DIR)

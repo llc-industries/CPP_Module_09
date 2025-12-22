@@ -61,7 +61,7 @@ void PmergeMe::runBenchmarks() {
 	_deqTime = _getTime() - start;
 }
 
-void PmergeMe::isSorted() {
+void PmergeMe::isSorted() const {
 	if (_vec.size() < 2) {
 		std::cout << "is sorted\n";
 		return;

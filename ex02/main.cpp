@@ -14,10 +14,12 @@ bool parseValues(char **argv) {
 	return true;
 }
 
+#if FULL
 void checkNumberOfComp(int worst, int total) {
-	std::cout << "Worst case is: " << worst << '\n';
+	std::cout << "Worst case is:             " << worst << '\n';
 	std::cout << "FJMI with std::vector made " << total << " comparisons\n";
 }
+#endif
 
 int main(int argc, char **argv) {
 	++argv;
@@ -33,9 +35,11 @@ int main(int argc, char **argv) {
 	FJMI.printValues("After");
 	FJMI.printBenchmark();
 
+#if FULL
 	std::cout << '\n';
 	FJMI.isSorted();
 	checkNumberOfComp(PmergeMe::getWorstCase(argc - 1), FJMI.totalComp);
+#endif
 
 	return 0;
 }
