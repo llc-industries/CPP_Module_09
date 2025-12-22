@@ -24,16 +24,14 @@ class PmergeMe {
 	void printBenchmark() const;
 	void runBenchmarks();
 	void isSorted();
+	static int getWorstCase(int size);
 	int totalComp;
 
 	/* Functor for comparisons */
 	struct Comp {
-		Comp(int &counter) : count(counter) {}
 		int &count;
-		bool operator()(const int &a, const int &b) {
-			count++;
-			return a < b;
-		}
+		Comp(int &counter) : count(counter) {}
+		bool operator()(const int &a, const int &b);
 	};
 
   private:
@@ -52,11 +50,11 @@ class PmergeMe {
 	void _fordJohnson(std::deque<int> &deq);
 
 	template <typename T> void _genJacobst(size_t pendSize, T &ctr) {
+		ctr.push_back(0);
 		ctr.push_back(1);
-		ctr.push_back(3);
 
-		size_t prev = 3;
-		size_t prev_prev = 1;
+		size_t prev = 1;
+		size_t prev_prev = 0;
 
 		while (42) {
 			size_t next = prev + 2 * prev_prev;

@@ -75,6 +75,20 @@ void PmergeMe::isSorted() {
 	std::cout << "is sorted\n";
 }
 
+int PmergeMe::getWorstCase(int n) {
+	int sum = 0;
+	for (int k = 1; k <= n; ++k) {
+		double value = (3.0 / 4.0) * k;
+		sum += static_cast<int>(ceil(log2(value)));
+	}
+	return sum;
+}
+
+bool PmergeMe::Comp::operator()(const int &a, const int &b) {
+	count++;
+	return a < b;
+}
+
 /* Private Methods */
 
 void PmergeMe::_fillContainers(char **argv) {
